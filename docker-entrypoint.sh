@@ -49,4 +49,9 @@ for exclude in ${EXCLUDES}; do
   echo "${exclude}" >> /backup_excludes
 done
 
+# Old backup.pid is preventing further backups, so we delete it if it exists
+if [ -f "/var/run/backup.pid" ]; then
+  rm -v /var/run/backup.pid
+fi
+
 exec "$@"
