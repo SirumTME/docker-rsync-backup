@@ -5,14 +5,9 @@ Basic backup of `/home` to `/mnt/backup_drive`
     docker run -d --name rsync-backup \
       --volume /home:/home \
       --volume /mnt/backup_drive:/backup \
-      jswetzen/rsync-backup
+      sirum/rsync-backup
 
 The container can then be stopped with `docker kill rsync-backup`.
-
-## Supported tags and architectures
-
-For use on a normal machine, use the `latest` tag.
-For ARM computers (like the Raspberry Pi) use `arm32v7`.
 
 # Details
 
@@ -29,7 +24,7 @@ Example backup of `/home` on `user@remote-server.com` to `/mnt/backup_drive`
       --volume /home/hostuser/.ssh:/ssh-keys \
       --env SSH_IDENTITY_FILE=/ssh-keys/id_rsa \
       --env BACKUPDIR=user@remote-server.com:/home \
-      jswetzen/rsync-backup
+      sirum/rsync-backup
 
 This setup uses the `id_rsa` key found in `/home/hostuser/.ssh/`. It's mounted
 to `/ssh-keys` rather than `/root/.ssh` because ssh stops if it finds a `config`
@@ -59,8 +54,3 @@ examples. Here is a full list of the variables, default values and uses.
       is that semicolon may not be present in any of the patterns.
     CRON_TIME ("0 1 * * *"): The time to do backups. The default is at 01:00
       every night.
-
-
-# Support
-
-Add a [GitHub issue](https://github.com/jswetzen/docker-rsync-backup/issues).
