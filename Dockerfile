@@ -16,4 +16,4 @@ COPY backup.sh /backup.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-CMD /backup.sh && crond -f
+CMD crond -f
