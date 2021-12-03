@@ -83,8 +83,21 @@ OPTIONS="--force --ignore-errors --delete \
 install -d "${ARCHIVEROOT}/${CURRENT}"
 echo "Installed ${ARCHIVEROOT}/${CURRENT}"
 
-# Delete old directory for this day (to only keep latest month
-rm -rf "${ARCHIVEROOT}"/*-"${INCREMENTDIR##*-}"
+# Delete old directories to only keep latest $KEEP_DAYS days
+KEEP_DIRECTORIES="-I . -I .. -I main"
+for i in $(seq 1 $KEEP_DAYS)
+do
+   KEEP_DIRECTORIES="$KEEP_DIRECTORIES -I $(date -d "$INCREMENTDIR - $i days" +%Y-%m-%d)"
+done
+
+for directory in $(ls $KEEP_DIRECTORIES)
+do
+  if [ -d $directory ]
+  then
+    echo "Deleting $directory"
+    rm -Rf $directory
+  fi
+done
 
 # Our actual rsyncing function
 do_rsync()

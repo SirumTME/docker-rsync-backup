@@ -54,3 +54,4 @@ examples. Here is a full list of the variables, default values and uses.
       is that semicolon may not be present in any of the patterns.
     CRON_TIME ("0 1 * * *"): The time to do backups. The default is at 01:00
       every night.
+    KEEP_DAYS (30): Defines how many Days of incremental Backups should be kept
