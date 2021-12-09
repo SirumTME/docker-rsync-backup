@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 echo "${CRON_TIME} /backup.sh" > /crontab.conf
 crontab /crontab.conf
@@ -54,4 +54,11 @@ if [ -f "/var/run/backup.pid" ]; then
   rm -v /var/run/backup.pid
 fi
 
-exec "$@"
+case "$1" in
+    cron)
+        cron -f
+        ;;
+    *)
+        exec "$@"
+        ;;
+esac

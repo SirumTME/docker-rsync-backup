@@ -1,5 +1,4 @@
-FROM alpine:3.6
-MAINTAINER Johan Swetzén <johan@swetzen.com>
+FROM debian:buster-slim
 
 ENV REMOTE_HOSTNAME="" \
     BACKUPDIR="/home" \
@@ -10,11 +9,11 @@ ENV REMOTE_HOSTNAME="" \
     CRON_TIME="0 1 * * *" \
     KEEP_DAYS=30
 
-RUN apk add --no-cache rsync openssh-client
+RUN apt-get update && apt-get install --no-install-recommends -y cron rsync openssh-client
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY backup.sh /backup.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-CMD crond -f
+CMD ["cron"]
