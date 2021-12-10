@@ -5,4 +5,3 @@ services:
     build: .
     environment:
       CRON_TIME: "* * * * *"
-      MATTERMOST_HOOK_URL: "https://mattermost.agenterp.com/hooks/hszp7jo487gfuf4m1yctcn11zh"
