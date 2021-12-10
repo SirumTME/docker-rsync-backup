@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 #########################################################
 # Script to do incremental rsync backups
@@ -52,7 +52,6 @@
 # CRON_TIME (default: "0 1 * * *")
 # - Time of day to do backup
 # - Specified in UTC
-# TODO: Allow Timezone to be specified
 
 #########################################
 # From here on out, you probably don't  #
@@ -81,7 +80,6 @@ OPTIONS="--force --ignore-errors --delete \
 
 # Make sure our backup tree exists
 install -d "${ARCHIVEROOT}/${CURRENT}"
-echo "Installed ${ARCHIVEROOT}/${CURRENT}"
 
 # Delete old directories to only keep latest $KEEP_DAYS days
 KEEP_DIRECTORIES="-I . -I .. -I main"
@@ -90,7 +88,7 @@ do
    KEEP_DIRECTORIES="$KEEP_DIRECTORIES -I $(date -d "$INCREMENTDIR - $i days" +%Y-%m-%d)"
 done
 
-for directory in $(ls $KEEP_DIRECTORIES)
+for directory in $(ls $KEEP_DIRECTORIES $ARCHIVEROOT)
 do
   if [ -d $directory ]
   then
@@ -107,31 +105,34 @@ do_rsync()
   rsync ${OPTIONS} -e "ssh -Tx -c aes128-gcm@openssh.com -o Compression=no -i ${SSH_IDENTITY_FILE} -p${SSH_PORT}" "${BACKUPDIR}" "$ARCHIVEROOT/$CURRENT"
 }
 
-# Our post rsync accounting function
-# TODO: Currently unused. May send email in the future
-do_accounting()
+do_rsync_failed()
 {
-   echo "Backup Accounting for Day $INCREMENTDIR on $REMOTE_HOSTNAME:">/tmp/rsync_script_tmpfile
-   echo >> /tmp/rsync_script_tmpfile
-   echo "################################################">>/tmp/rsync_script_tmpfile
-   # du -s $ARCHIVEROOT/* >> /tmp/rsync_script_tmpfile
-   # echo "Mail $MAILADDR -s $REMOTE_HOSTNAME Backup Report < /tmp/rsync_script_tmpfile"
-   # Mail $MAILADDR -s $REMOTE_HOSTNAME Backup Report < /tmp/rsync_script_tmpfile
-   echo "rm /tmp/rsync_script_tmpfile"
-   rm /tmp/rsync_script_tmpfile
+  echo "Backup failed from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}"
+  if [ "${MATTERMOST_HOOK_URL}" ]; then
+    curl -s -k -X POST -H 'Content-Type: application/json' -d "{\"text\": \"#### :exclamation: Backup failed from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}\"}" ${MATTERMOST_HOOK_URL}
+  fi
 }
 
-# Some error handling and/or run our backup and accounting
+do_rsync_success()
+{
+  echo "Backup done from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}"
+  if [ "${MATTERMOST_HOOK_URL}" ]; then
+    curl -s -k -X POST -H 'Content-Type: application/json' -d "{\"text\": \"#### :white_check_mark: Backup done from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}\"}" ${MATTERMOST_HOOK_URL}
+  fi
+}
+
 if [ -f $PIDFILE ]; then
   echo "$(date): backup already running, remove pid file to rerun"
   exit
 else
+  echo "Starting Backup from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}"
   touch $PIDFILE;
-  # Now the actual transfer
-  do_rsync
-  # Accounting in the future
-  # do_accounting
-  echo "Backup done on ${INCREMENTDIR}"
+  {   # try
+      do_rsync && do_rsync_success
+  } || {
+      # catch
+      do_rsync_failed
+  }
   rm $PIDFILE;
 fi
 

@@ -3,3 +3,6 @@ version: "2.4"
 services:
   rsync-backup:
     build: .
+    environment:
+      CRON_TIME: "* * * * *"
+      MATTERMOST_HOOK_URL: "https://mattermost.agenterp.com/hooks/hszp7jo487gfuf4m1yctcn11zh"

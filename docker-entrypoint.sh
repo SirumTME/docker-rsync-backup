@@ -1,7 +1,12 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-echo "${CRON_TIME} /backup.sh" > /crontab.conf
-crontab /crontab.conf
+cat << EOF >> /etc/cron.d/backup-cron
+SHELL=/bin/bash
+BASH_ENV=/backup.env
+${CRON_TIME} /backup.sh  > /proc/1/fd/1 2>&1
+EOF
+
+crontab /etc/cron.d/backup-cron
 
 # Get SSH keys somehow. Alternatives:
 # 1. Generate in container
@@ -19,7 +24,7 @@ crontab /crontab.conf
 if [ ! -f "${SSH_IDENTITY_FILE}" ]; then
   install -d "$(dirname "${SSH_IDENTITY_FILE}")"
   ssh-keygen -q -trsa -b2048 -N "" -f "${SSH_IDENTITY_FILE}"
-  printf "\nSSH keys generated at %s. Public key:\n\n" "${SSH_IDENTITY_FILE}"
+  printf "\nSSH keys generated at %s. Public key:\n" "${SSH_IDENTITY_FILE}"
   cat "${SSH_IDENTITY_FILE}.pub"
   printf "\n"
 fi
@@ -56,6 +61,7 @@ fi
 
 case "$1" in
     cron)
+        declare -p | grep -E 'SSH_IDENTITY_FILE|SSH_PORT|KEEP_DAYS|ARCHIVEROOT|BACKUPDIR|MATTERMOST_HOOK_URL' > /backup.env
         cron -f
         ;;
     *)
