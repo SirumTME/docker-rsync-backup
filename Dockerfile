@@ -7,12 +7,15 @@ ENV REMOTE_HOSTNAME="" \
     ARCHIVEROOT="/backup" \
     EXCLUDES="" \
     CRON_TIME="0 1 * * *" \
-    KEEP_DAYS=30
+    KEEP_DAYS=30 \
+    MATTERMOST_HOOK_URL=""
 
-RUN apt-get update && apt-get install --no-install-recommends -y cron rsync openssh-client
+RUN apt-get update && apt-get install --no-install-recommends -y cron curl rsync openssh-client
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY backup.sh /backup.sh
+
+VOLUME /backup
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
