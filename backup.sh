@@ -90,10 +90,10 @@ done
 
 for directory in $(ls $KEEP_DIRECTORIES $ARCHIVEROOT)
 do
-  if [ -d $directory ]
+  if [ -d ${ARCHIVEROOT}/${directory} ]
   then
-    echo "Deleting $directory"
-    rm -Rf $directory
+    echo "Deleting ${ARCHIVEROOT}/${directory}"
+    rm -Rf ${ARCHIVEROOT}/${directory}
   fi
 done
 
