@@ -109,7 +109,7 @@ do_rsync_failed()
 {
   echo "Backup failed from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}"
   if [ "${MATTERMOST_HOOK_URL}" ]; then
-    curl -s -k -X POST -H 'Content-Type: application/json' -d "{\"text\": \"#### :exclamation: Backup failed from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}\"}" ${MATTERMOST_HOOK_URL}
+    curl -s -k -X POST -H 'Content-Type: application/json' -d "{\"text\": \"#### :exclamation: ${MATTERMOST_PREFIX} Backup failed from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}\"}" ${MATTERMOST_HOOK_URL}
   fi
 }
 
@@ -117,7 +117,7 @@ do_rsync_success()
 {
   echo "Backup done from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}"
   if [ "${MATTERMOST_HOOK_URL}" ]; then
-    curl -s -k -X POST -H 'Content-Type: application/json' -d "{\"text\": \"#### :white_check_mark: Backup done from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}\"}" ${MATTERMOST_HOOK_URL}
+    curl -s -k -X POST -H 'Content-Type: application/json' -d "{\"text\": \"#### :white_check_mark: ${MATTERMOST_PREFIX} Backup done from ${BACKUPDIR} into ${ARCHIVEROOT}/${INCREMENTDIR}\"}" ${MATTERMOST_HOOK_URL}
   fi
 }
 
