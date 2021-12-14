@@ -102,7 +102,7 @@ do_rsync()
 {
   # ShellCheck: Allow unquoted OPTIONS because it contain spaces
   # shellcheck disable=SC2086
-  rsync ${OPTIONS} -e "ssh -Tx -c aes128-gcm@openssh.com -o Compression=no -i ${SSH_IDENTITY_FILE} -p${SSH_PORT}" "${BACKUPDIR}" "$ARCHIVEROOT/$CURRENT"
+  /usr/local/bin/rsync-no-vanished ${OPTIONS} -e "ssh -Tx -c aes128-gcm@openssh.com -o Compression=no -i ${SSH_IDENTITY_FILE} -p${SSH_PORT}" "${BACKUPDIR}" "$ARCHIVEROOT/$CURRENT"
 }
 
 do_rsync_failed()

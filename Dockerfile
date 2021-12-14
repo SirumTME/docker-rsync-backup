@@ -13,6 +13,7 @@ ENV REMOTE_HOSTNAME="" \
 RUN apt-get update && apt-get install --no-install-recommends -y cron curl rsync openssh-client
 
 COPY docker-entrypoint.sh /usr/local/bin/
+COPY rsync-no-vanished /usr/local/bin/
 COPY backup.sh /backup.sh
 
 VOLUME /backup
