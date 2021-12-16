@@ -61,7 +61,7 @@ fi
 
 case "$1" in
     cron)
-        declare -p | grep -E 'SSH_IDENTITY_FILE|SSH_PORT|KEEP_DAYS|ARCHIVEROOT|BACKUPDIR|MATTERMOST_HOOK_URL' > /backup.env
+        declare -p | grep -E 'SSH_IDENTITY_FILE|SSH_PORT|KEEP_DAYS|ARCHIVEROOT|BACKUPDIR|MATTERMOST_HOOK_URL|MATTERMOST_PREFIX' > /backup.env
         cron -f
         ;;
     *)
