@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm /etc/cron.d/backup-cron
 cat << EOF >> /etc/cron.d/backup-cron
 SHELL=/bin/bash
 BASH_ENV=/backup.env

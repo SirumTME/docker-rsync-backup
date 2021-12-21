@@ -2,6 +2,7 @@ version: "2.4"
 
 services:
   rsync-backup:
+    image: sirum/rsync-backup:latest
     build: .
     environment:
       CRON_TIME: "* * * * *"
