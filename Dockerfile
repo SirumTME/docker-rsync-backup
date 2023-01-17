@@ -6,6 +6,7 @@ ENV REMOTE_HOSTNAME="" \
     SSH_IDENTITY_FILE="/root/.ssh/id_rsa" \
     ARCHIVEROOT="/backup" \
     EXCLUDES="" \
+    RSYNC_OPTIONS="" \
     CRON_TIME="0 1 * * *" \
     KEEP_DAYS=30 \
     MATTERMOST_HOOK_URL="" \

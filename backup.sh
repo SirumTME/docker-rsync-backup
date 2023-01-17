@@ -76,7 +76,7 @@ OPTIONS="--force --ignore-errors --delete \
  --exclude-from=/backup_excludes \
  --skip-compress=$RSYNC_SKIP_COMPRESS \
  --backup --backup-dir=$ARCHIVEROOT/$INCREMENTDIR \
- -aHAXxv --numeric-ids --progress"
+ -aHAXxv --numeric-ids --progress $RSYNC_OPTIONS"
 
 # Make sure our backup tree exists
 install -d "${ARCHIVEROOT}/${CURRENT}"
