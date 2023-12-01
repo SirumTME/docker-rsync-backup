@@ -1,7 +1,13 @@
 #!/bin/bash
 
-rm /etc/cron.d/backup-cron
-cat << EOF >> /etc/cron.d/backup-cron
+
+cron_file="/etc/cron.d/backup-cron"
+
+if [ -f "${cron_file}" ]; then
+    rm ${cron_file}
+fi
+
+cat << EOF >> ${cron_file}
 SHELL=/bin/bash
 BASH_ENV=/backup.env
 ${CRON_TIME} /backup.sh  > /proc/1/fd/1 2>&1
@@ -62,7 +68,7 @@ fi
 
 case "$1" in
     cron)
-        declare -p | grep -E 'SSH_IDENTITY_FILE|SSH_PORT|KEEP_DAYS|ARCHIVEROOT|BACKUPDIR|MATTERMOST_HOOK_URL|MATTERMOST_PREFIX' > /backup.env
+        declare -p | grep -E 'RSYNC_OPTIONS|SSH_IDENTITY_FILE|SSH_PORT|KEEP_DAYS|ARCHIVEROOT|BACKUPDIR|MATTERMOST_HOOK_URL|MATTERMOST_PREFIX' > /backup.env
         cron -f
         ;;
     *)
